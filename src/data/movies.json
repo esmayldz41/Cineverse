@@ -3,21 +3,21 @@
     "id": 1,
     "title": "Inception",
     "description": "Rüyaların içinde geçen bir soygun hikayesi.",
-    "poster": "https://image.tmdb.org/t/p/w500/9gk7admal4zl241bKFMAMQNLq8G.jpg",
+    "poster": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
     "rating": 8.8
   },
   {
     "id": 2,
     "title": "Interstellar",
     "description": "İnsanlığın kurtuluşu için solucan deliğinden geçen bir yolculuk.",
-    "poster": "https://image.tmdb.org/t/p/w500/gEU2QniL6E77AAyFcAJ20eNSieE.jpg",
+    "poster": "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
     "rating": 8.6
   },
   {
     "id": 3,
     "title": "The Dark Knight",
     "description": "Batman, Joker'in kaosuna karşı Gotham'ı savunuyor.",
-    "poster": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+    "poster": "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
     "rating": 9.0
   }
 ]
