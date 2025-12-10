@@ -3,25 +3,37 @@ import MainLayout from '../layouts/MainLayout.astro';
 import movies from '../data/movies.json';
 import MovieCard from '../components/MovieCard.astro';
 
-// JSON'daki benzersiz kategorileri bulalım (Tekrar edenleri siler)
+// Kategorileri belirle
 const categories = ["Tümü", ...new Set(movies.map(movie => movie.category))];
 ---
 
 <MainLayout title="Anasayfa">
     <h1 class="page-title">Cineverse Keşfet</h1>
     
-    <div class="filter-container">
-        {categories.map(category => (
-            <button class="filter-btn" data-category={category}>
-                {category}
-            </button>
-        ))}
+    <div class="controls-container">
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Film adı ara..." />
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <div class="filter-container">
+            {categories.map(category => (
+                <button class="filter-btn" data-category={category}>
+                    {category}
+                </button>
+            ))}
+        </div>
     </div>
 
     <div class="movie-grid" id="movie-grid">
         {movies.map((movie) => (
-            // Her kartı bir div içine alıp kategorisini etiketliyoruz
-            <div class="movie-wrapper" data-category={movie.category}>
+            // data-title ekledik: Arama yaparken isme buradan bakacak (hepsi küçük harf)
+            <div 
+                class="movie-wrapper" 
+                data-category={movie.category} 
+                data-title={movie.title.toLowerCase()} 
+            >
                 <MovieCard 
                     id={movie.id}
                     title={movie.title} 
@@ -32,75 +44,164 @@ const categories = ["Tümü", ...new Set(movies.map(movie => movie.category))];
             </div>
         ))}
     </div>
+
+    <div id="no-results" style="display: none; text-align: center; margin-top: 2rem; color: #666;">
+        <p>Aradığınız kriterlere uygun film bulunamadı.</p>
+    </div>
 </MainLayout>
 
 <script>
-    // Sayfa yüklendiğinde çalışır
-    const buttons = document.querySelectorAll('.filter-btn');
+    // HTML Elemanlarını Seçiyoruz
+    const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+    const filterBtns = document.querySelectorAll('.filter-btn');
     const movies = document.querySelectorAll('.movie-wrapper') as NodeListOf<HTMLElement>;
+    const noResultsMsg = document.getElementById('no-results') as HTMLElement;
 
-    buttons.forEach(btn => {
+    // Başlangıç Durumu
+    let activeCategory = 'Tümü';
+    let searchQuery = '';
+
+    // --- Fonksiyon: Filtreleri Uygula ---
+    // Bu fonksiyon hem kategori hem de arama metnine bakar
+    function applyFilters() {
+        let visibleCount = 0;
+
+        movies.forEach(movie => {
+            const movieCategory = movie.getAttribute('data-category');
+            const movieTitle = movie.getAttribute('data-title') || ''; // Küçük harfli başlık
+
+            // 1. Kategori Uyuyor mu?
+            const isCategoryMatch = (activeCategory === 'Tümü') || (movieCategory === activeCategory);
+            
+            // 2. Arama Metni Uyuyor mu?
+            const isSearchMatch = movieTitle.includes(searchQuery);
+
+            // İkisi de uyuyorsa göster, yoksa gizle
+            if (isCategoryMatch && isSearchMatch) {
+                movie.style.display = 'block';
+                visibleCount++;
+            } else {
+                movie.style.display = 'none';
+            }
+        });
+
+        // Hiç film kalmadıysa "Bulunamadı" mesajı göster
+        if (visibleCount === 0) {
+            noResultsMsg.style.display = 'block';
+        } else {
+            noResultsMsg.style.display = 'none';
+        }
+    }
+
+    // --- Olay Dinleyicileri (Event Listeners) ---
+
+    // 1. Kategori Butonuna Tıklanınca
+    filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // 1. Tıklanan butonun kategorisini al
-            const category = btn.getAttribute('data-category');
-
-            // 2. Aktif buton stilini güncelle (Opsiyonel görsel şıklık)
-            buttons.forEach(b => b.classList.remove('active'));
+            // Aktif butonu güncelle (Görsel)
+            filterBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
-            // 3. Filmleri kontrol et
-            movies.forEach(movie => {
-                const movieCategory = movie.getAttribute('data-category');
-
-                if (category === 'Tümü' || category === movieCategory) {
-                    movie.style.display = 'block'; // Göster
-                } else {
-                    movie.style.display = 'none'; // Gizle
-                }
-            });
+            // Değişkeni güncelle ve filtrele
+            activeCategory = btn.getAttribute('data-category') || 'Tümü';
+            applyFilters();
         });
     });
+
+    // 2. Arama Kutusuna Yazılınca
+    searchInput.addEventListener('input', (e) => {
+        // Yazılanı al ve küçük harfe çevir
+        const target = e.target as HTMLInputElement;
+        searchQuery = target.value.toLowerCase();
+        applyFilters();
+    });
+    
+    // Sayfa açıldığında varsayılan butonu (Tümü) aktif yap
+    filterBtns[0].classList.add('active');
+
 </script>
 
 <style>
     .page-title {
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        color: #222;
     }
 
-    /* Filtre Butonları Tasarımı */
+    .controls-container {
+        max-width: 800px;
+        margin: 0 auto 3rem auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    /* Arama Kutusu Tasarımı */
+    .search-box {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 12px 45px 12px 20px;
+        font-size: 1rem;
+        border: 2px solid #eee;
+        border-radius: 50px;
+        outline: none;
+        transition: border-color 0.3s box-shadow 0.3s;
+    }
+
+    .search-box input:focus {
+        border-color: #222;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+        opacity: 0.5;
+        pointer-events: none; /* Tıklanmasın */
+    }
+
+    /* Filtre Butonları */
     .filter-container {
         display: flex;
         justify-content: center;
         gap: 10px;
-        margin-bottom: 2rem;
         flex-wrap: wrap;
     }
 
     .filter-btn {
-        padding: 8px 16px;
-        border: 2px solid #ddd;
+        padding: 8px 20px;
+        border: 1px solid #ddd;
         border-radius: 20px;
         background: white;
         cursor: pointer;
-        font-weight: bold;
-        transition: all 0.3s ease;
+        font-weight: 500;
+        transition: all 0.2s ease;
         color: #555;
+        font-size: 0.9rem;
     }
 
     .filter-btn:hover {
-        background: #f0f0f0;
-        border-color: #bbb;
+        background: #f7f7f7;
+        transform: translateY(-2px);
     }
 
-    /* Seçili olan butonun stili (JS ile eklenir) */
     .filter-btn.active {
         background: #222;
         color: white;
         border-color: #222;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    /* Film Grid Yapısı */
+    /* Film Grid */
     .movie-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -110,9 +211,8 @@ const categories = ["Tümü", ...new Set(movies.map(movie => movie.category))];
         margin: 0 auto;
     }
 
-    /* Animasyonlu geçiş için */
     .movie-wrapper {
-        animation: fadeIn 0.5s ease;
+        animation: fadeIn 0.4s ease;
     }
 
     @keyframes fadeIn {
