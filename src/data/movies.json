@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Inception",
+    "description": "Rüyaların içinde geçen bir soygun hikayesi.",
+    "poster": "https://image.tmdb.org/t/p/w500/9gk7admal4zl241bKFMAMQNLq8G.jpg",
+    "rating": 8.8
+  },
+  {
+    "id": 2,
+    "title": "Interstellar",
+    "description": "İnsanlığın kurtuluşu için solucan deliğinden geçen bir yolculuk.",
+    "poster": "https://image.tmdb.org/t/p/w500/gEU2QniL6E77AAyFcAJ20eNSieE.jpg",
+    "rating": 8.6
+  },
+  {
+    "id": 3,
+    "title": "The Dark Knight",
+    "description": "Batman, Joker'in kaosuna karşı Gotham'ı savunuyor.",
+    "poster": "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
+    "rating": 9.0
+  }
+]

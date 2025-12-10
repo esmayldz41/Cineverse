@@ -1,33 +1,14 @@
 ---
-// Burası JavaScript/Frontmatter alanı
-const pageTitle = "CineVerse";
+import MainLayout from '../layouts/MainLayout.astro';
+import movies from '../data/movies.json';
 ---
 
-<html lang="tr">
-	<head>
-		<meta charset="utf-8" />
-		<title>{pageTitle}</title>
-	</head>
-	<body>
-		<div class="container">
-			<h1>CineVerse'e Hoş Geldiniz !</h1>
-			<p>Burası proje lideri tarafından hazırlandı.</p>
-		</div>
-	</body>
-</html>
-
-<style>
-  /* İŞTE SCOPED CSS BURASI */
-  /* Bu stiller sadece bu sayfadaki elementleri etkiler */
-  
-  h1 {
-    color: darkred;
-    font-family: sans-serif;
-  }
-
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-  }
-</style>
+<MainLayout title="Anasayfa">
+    <h1>Hoş Geldiniz!</h1>
+    <p>Burası Cineverse ana sayfası. Artık Layout kullanıyoruz!</p>
+    <ul>
+        {movies.map((movie) => (
+            <li>{movie.title} - {movie.rating}</li>
+        ))}
+    </ul>
+</MainLayout>
