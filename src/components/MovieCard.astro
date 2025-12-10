@@ -1,0 +1,69 @@
+---
+// 1. Verileri karşılıyoruz (Props)
+const { title, description, poster, rating } = Astro.props;
+---
+
+<article class="movie-card">
+    <div class="poster-wrapper">
+        <img src={poster} alt={title} />
+        <span class="rating">{rating}</span>
+    </div>
+    <div class="content">
+        <h3>{title}</h3>
+        <p>{description}</p>
+    </div>
+</article>
+
+<style>
+    .movie-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: transform 0.2s;
+        font-family: sans-serif;
+    }
+
+    .movie-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .poster-wrapper {
+        position: relative;
+        height: 300px; /* Görseller eşit boyda olsun diye */
+    }
+
+    .poster-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .rating {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ffc107;
+        color: #000;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 4px;
+    }
+
+    .content {
+        padding: 15px;
+    }
+
+    h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    p {
+        margin: 0;
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+</style>
