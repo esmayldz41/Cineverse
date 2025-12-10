@@ -4,20 +4,95 @@
     "title": "Inception",
     "description": "Rüyaların içinde geçen bir soygun hikayesi.",
     "poster": "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
-    "rating": 8.8
+    "rating": 8.8,
+    "category": "Bilim Kurgu"
   },
   {
     "id": 2,
     "title": "Interstellar",
     "description": "İnsanlığın kurtuluşu için solucan deliğinden geçen bir yolculuk.",
     "poster": "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
-    "rating": 8.6
+    "rating": 8.6,
+    "category": "Bilim Kurgu"
   },
   {
     "id": 3,
     "title": "The Dark Knight",
     "description": "Batman, Joker'in kaosuna karşı Gotham'ı savunuyor.",
     "poster": "https://m.media-amazon.com/images/M/MV5BMTMxNTMwODM0NF5BMl5BanBnXkFtZTcwODAyMTk2Mw@@._V1_.jpg",
-    "rating": 9.0
+    "rating": 9.0,
+    "category": "Aksiyon"
+  },
+  {
+    "id": 4,
+    "title": "The Godfather",
+    "description": "Bir mafya ailesinin yükselişi ve düşüşü.",
+    "poster": "https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
+    "rating": 9.2,
+    "category": "Dram"
+  },
+  {
+    "id": 5,
+    "title": "Avengers: Endgame",
+    "description": "Yenilmezler'in Thanos'a karşı son savaşı.",
+    "poster": "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_.jpg",
+    "rating": 8.4,
+    "category": "Aksiyon"
+  },
+  {
+    "id": 6,
+    "title": "Pulp Fiction",
+    "description": "Los Angeles yeraltı dünyasından iç içe geçmiş hikayeler.",
+    "poster": "https://m.media-amazon.com/images/M/MV5BNGNhMDIzZTUtNTBlZi00MTRlLWFjM2ItYzViMjE3YzI5MjljXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
+    "rating": 8.9,
+    "category": "Suç"
+  },
+  {
+    "id": 7,
+    "title": "Matrix",
+    "description": "Gerçek sandığımız dünya aslında bir simülasyon mu?",
+    "poster": "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
+    "rating": 8.7,
+    "category": "Bilim Kurgu"
+  },
+  {
+    "id": 8,
+    "title": "Forrest Gump",
+    "description": "Saf bir adamın inanılmaz hayat hikayesi.",
+    "poster": "https://m.media-amazon.com/images/M/MV5BNWIwODRlZTUtY2U3ZS00Yzg1LWJhNzYtMmZiYmEyNmU1NjMzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_.jpg",
+    "rating": 8.8,
+    "category": "Dram"
+  },
+  {
+    "id": 9,
+    "title": "Gladiator",
+    "description": "İhanete uğrayan bir generalin intikam savaşı.",
+    "poster": "https://m.media-amazon.com/images/M/MV5BMDliMmNhNDEtODUyOS00MjNlLTgxODEtN2U3NzIxMGVkZTA1L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_.jpg",
+    "rating": 8.5,
+    "category": "Aksiyon"
+  },
+  {
+    "id": 10,
+    "title": "Superbad",
+    "description": "Mezuniyet öncesi partiye gitmeye çalışan liseliler.",
+    "poster": "https://m.media-amazon.com/images/M/MV5BMTc0NjIyMjA2OF5BMl5BanBnXkFtZTcwMzIxNDE1MQ@@._V1_.jpg",
+    "rating": 7.6,
+    "category": "Komedi"
+  },
+  {
+    "id": 11,
+    "title": "The Hangover",
+    "description": "Bekarlığa veda partisinde her şeyi unutan arkadaşlar.",
+    "poster": "https://m.media-amazon.com/images/M/MV5BNGQwZjg5YmYtY2VkNC00NzliLTljYTctNzI5NmU3MjE2ODQzXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_.jpg",
+    "rating": 7.7,
+    "category": "Komedi"
+  },
+  {
+    "id": 12,
+    "title": "Joker",
+    "description": "Toplum tarafından dışlanan bir komedyenin hikayesi.",
+    "poster": "https://m.media-amazon.com/images/M/MV5BNGVjNWI4ZGUtNzE0MS00YTJmLWE0ZDctN2ZiYTk2YmI3NTYyXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_.jpg",
+    "rating": 8.4,
+    "category": "Dram"
   }
 ]
