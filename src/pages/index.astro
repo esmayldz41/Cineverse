@@ -10,6 +10,7 @@ import MovieCard from '../components/MovieCard.astro';
     <div class="movie-grid">
         {movies.map((movie) => (
             <MovieCard 
+                id={movie.id}
                 title={movie.title} 
                 description={movie.description} 
                 poster={movie.poster} 

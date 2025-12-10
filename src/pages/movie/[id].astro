@@ -1,0 +1,119 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import movies from '../../data/movies.json';
+
+// 1. (Kişi 1 Görevi): getStaticPaths Fonksiyonu
+// Astro'ya hangi ID'ler için sayfa oluşturacağını söyler.
+export function getStaticPaths() {
+  return movies.map((movie) => ({
+    params: { id: movie.id.toString() }, // URL'deki id kısmı (mutlaka string olmalı)
+    props: { movie }, // O sayfaya gönderilecek film verisi
+  }));
+}
+
+// 2. Sayfa için gelen veriyi yakalıyoruz
+const { movie } = Astro.props;
+---
+
+<MainLayout title={movie.title}>
+    <div class="back-link">
+        <a href="/">← Filmlere Dön</a>
+    </div>
+
+    <div class="movie-detail">
+        <div class="image-container">
+            <img src={movie.poster} alt={movie.title} />
+            <div class="badge">{movie.rating}</div>
+        </div>
+
+        <div class="info-container">
+            <h1>{movie.title}</h1>
+            <p class="desc">{movie.description}</p>
+            <button class="watch-btn">Fragmanı İzle</button>
+        </div>
+    </div>
+</MainLayout>
+
+<style>
+    .back-link {
+        margin-bottom: 2rem;
+    }
+    .back-link a {
+        text-decoration: none;
+        color: #666;
+        font-weight: bold;
+    }
+    .back-link a:hover {
+        color: #000;
+    }
+
+    /* İki sütunlu yapı */
+    .movie-detail {
+        display: flex;
+        gap: 3rem;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .image-container {
+        position: relative;
+        flex: 0 0 300px; /* Sabit genişlik */
+    }
+
+    .image-container img {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #ffc107;
+        color: #000;
+        font-weight: bold;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 1.1rem;
+    }
+
+    .info-container h1 {
+        margin-top: 0;
+        font-size: 2.5rem;
+        color: #222;
+    }
+
+    .desc {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #555;
+        margin-bottom: 2rem;
+    }
+
+    .watch-btn {
+        background-color: #222;
+        color: #fff;
+        border: none;
+        padding: 10px 25px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .watch-btn:hover {
+        background-color: #444;
+    }
+
+    /* Mobil uyumluluk: Telefonda alt alta geçsin */
+    @media (max-width: 768px) {
+        .movie-detail {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+    }
+</style>

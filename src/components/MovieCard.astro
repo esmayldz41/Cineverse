@@ -1,20 +1,31 @@
 ---
 // 1. Verileri karşılıyoruz (Props)
-const { title, description, poster, rating } = Astro.props;
+const { id,title, description, poster, rating } = Astro.props;
+
+
 ---
 
-<article class="movie-card">
-    <div class="poster-wrapper">
-        <img src={poster} alt={title} />
-        <span class="rating">{rating}</span>
-    </div>
-    <div class="content">
-        <h3>{title}</h3>
-        <p>{description}</p>
-    </div>
-</article>
+<a href={`/movie/${id}`} class="card-link">
+    <article class="movie-card">
+        <div class="poster-wrapper">
+            <img src={poster} alt={title} />
+            <span class="rating">{rating}</span>
+        </div>
+        <div class="content">
+            <h3>{title}</h3>
+            <p>{description}</p>
+        </div>
+    </article>
+</a>
 
 <style>
+
+    /* Link stilini temizleyelim */
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
     .movie-card {
         background: #fff;
         border-radius: 8px;
@@ -22,6 +33,7 @@ const { title, description, poster, rating } = Astro.props;
         overflow: hidden;
         transition: transform 0.2s;
         font-family: sans-serif;
+        height: 100%; /* Kartlar eşit boyda kalsın */
     }
 
     .movie-card:hover {
