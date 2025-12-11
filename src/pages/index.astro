@@ -8,7 +8,10 @@ const categories = ["Tümü", ...new Set(movies.map(movie => movie.category))];
 ---
 
 <MainLayout title="Anasayfa">
-    <h1 class="page-title">Cineverse Keşfet</h1>
+    <div class="header-container">
+
+        <h1 class="page-title">Cineverse Keşfet</h1>
+    </div>
     
     <div class="controls-container">
         
@@ -122,10 +125,17 @@ const categories = ["Tümü", ...new Set(movies.map(movie => movie.category))];
 </script>
 
 <style>
-    .page-title {
-        text-align: center;
+    .header-container {
+        background-color: rgb(255, 188, 64);
+        color: white;
+        box-shadow: #333 0px 2px 4px;
+        padding: 0;
         margin-bottom: 2rem;
-        color: #222;
+        width: 400px;
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        border-radius: 12px;
     }
 
     .controls-container {
@@ -134,6 +144,7 @@ const categories = ["Tümü", ...new Set(movies.map(movie => movie.category))];
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 1.5rem;
     }
 
@@ -142,11 +153,12 @@ const categories = ["Tümü", ...new Set(movies.map(movie => movie.category))];
         position: relative;
         width: 100%;
         max-width: 500px;
+        margin-right: 40px;
     }
 
     .search-box input {
         width: 100%;
-        padding: 12px 45px 12px 20px;
+        padding: 12px 20px 12px 20px;
         font-size: 1rem;
         border: 2px solid #eee;
         border-radius: 50px;
@@ -190,8 +202,9 @@ const categories = ["Tümü", ...new Set(movies.map(movie => movie.category))];
     }
 
     .filter-btn:hover {
-        background: #f7f7f7;
+        color: white;
         transform: translateY(-2px);
+        background-color: #1d1d1d;
     }
 
     .filter-btn.active {

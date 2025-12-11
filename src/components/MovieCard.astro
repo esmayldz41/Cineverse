@@ -31,13 +31,18 @@ const { id,title, description, poster, rating } = Astro.props;
         border-radius: 8px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         overflow: hidden;
-        transition: transform 0.2s;
+        transition: all 0.2s;
         font-family: sans-serif;
         height: 100%; /* Kartlar eşit boyda kalsın */
     }
 
     .movie-card:hover {
         transform: translateY(-5px);
+        background-color: #1d1d1d;
+    }
+    .movie-card:hover .content h3,
+    .movie-card:hover .content p{
+        color: #ffffff;
     }
 
     .poster-wrapper {

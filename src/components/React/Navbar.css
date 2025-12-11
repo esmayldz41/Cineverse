@@ -1,0 +1,47 @@
+.Navbar {
+    background-color: #222;
+    color: #fff;
+    padding: 0.1rem 5rem; 
+    margin-bottom: 1.5rem;
+    box-shadow: #333 0px 2px 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.Navbar h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Logo{
+    font-size: 50px;
+    margin-right: 10px;
+}
+
+.Navbar button{
+    background-color: #ffbc40;
+    color: #222;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.random{
+    font-size: 35px;
+    margin-left: 5px;
+}
+.Navbar button:hover {
+    background-color: #1d1d1d;
+    color: #ffbc40;
+    transform: scale(1.1);
+}

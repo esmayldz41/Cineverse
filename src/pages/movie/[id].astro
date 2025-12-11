@@ -42,9 +42,16 @@ const { movie } = Astro.props;
         text-decoration: none;
         color: #666;
         font-weight: bold;
+        transition: all 0.2s ease;
+        background-color: rgb(255, 188, 64);
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        display: inline-block;
     }
+    
     .back-link a:hover {
         color: #000;
+        transform: scale(1.05);
     }
 
     /* İki sütunlu yapı */
@@ -101,11 +108,12 @@ const { movie } = Astro.props;
         font-size: 1rem;
         border-radius: 5px;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: all 0.2s ease;
     }
 
     .watch-btn:hover {
         background-color: #444;
+        transform: scale(1.1);
     }
 
     /* Mobil uyumluluk: Telefonda alt alta geçsin */
