@@ -1,0 +1,180 @@
+---
+interface Props {
+  movieId: string | number;
+}
+const { movieId } = Astro.props;
+---
+
+<div class="rating-wrapper">
+  
+  <div class="rating-inner">
+    <span class="rating-label">Puanla:</span>
+    
+    <select id={`rate-select-${movieId}`} class="rate-select">
+      <option value="" disabled selected>Seç..</option>
+      <option value="10">10 (Mükemmel)</option>
+      <option value="9">9 (Çok İyi)</option>
+      <option value="8">8 (İyi)</option>
+      <option value="7">7 (Güzel)</option>
+      <option value="6">6 (Ortalama)</option>
+      <option value="5">5 (Orta)</option>
+      <option value="4">4 (Kötü)</option>
+      <option value="3">3 (Çok Kötü)</option>
+      <option value="2">2 (Berbat)</option>
+      <option value="1">1 (Çöp)</option>
+    </select>
+
+    <button id={`vote-btn-${movieId}`} class="vote-btn" data-movie-id={movieId}>
+      ✓
+    </button>
+  </div>
+
+  <span id={`msg-${movieId}`} class="rating-msg"></span>
+</div>
+
+<script>
+  import { auth } from "../firebaseConfig";
+  import { onAuthStateChanged } from "firebase/auth";
+
+  function initRatingSystem() {
+    const buttons = document.querySelectorAll('.vote-btn');
+
+    buttons.forEach((button) => {
+      
+      const oldBtn = button as HTMLButtonElement;
+      
+      if (oldBtn.dataset.processed === "true") return;
+      oldBtn.dataset.processed = "true";
+
+      const movieId = oldBtn.getAttribute('data-movie-id');
+      const select = document.getElementById(`rate-select-${movieId}`) as HTMLSelectElement;
+      const msg = document.getElementById(`msg-${movieId}`) as HTMLElement;
+
+      if (!select || !msg) return;
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // Kullanıcı VARSA: Kayıtlı puanı getir
+            const savedRating = localStorage.getItem(`rating-${movieId}`);
+            if (savedRating) {
+                select.value = savedRating;
+                msg.textContent = `(${savedRating}/10)`;
+                msg.style.opacity = '1';
+                msg.style.color = '#ddd'; // Varsayılan renk
+            }
+        } else {
+            // Kullanıcı YOKSA (Çıkış yaptıysa): Her şeyi sıfırla
+            select.value = "";
+            msg.textContent = "";
+            msg.style.opacity = "0";
+        }
+      });
+    
+      oldBtn.onclick = (e) => {
+        e.preventDefault();
+
+        const user = auth.currentUser; 
+        if (!user) {
+          alert("Puan verebilmek için lütfen sağ üstten GİRİŞ yapınız!");
+          return;
+        }
+
+        const value = select.value;
+        if (value) {
+          localStorage.setItem(`rating-${movieId}`, value);
+          msg.textContent = `Kaydedildi ✓`;
+          msg.style.opacity = '1';
+          msg.style.color = '#2ecc71';
+
+          oldBtn.style.transform = "scale(0.9)";
+          setTimeout(() => { oldBtn.style.transform = "scale(1)"; }, 150);
+        } else {
+          alert("Lütfen bir puan seçin.");
+        }
+      };
+    });
+  }
+
+  initRatingSystem();
+  document.addEventListener('astro:page-load', initRatingSystem);
+</script>
+
+<style>
+  .rating-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .rating-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent; 
+    padding: 8px 20px;       
+    border-radius: 30px;     
+    border: 2px solid white; 
+    transition: all 0.3s ease;
+    height: 48px;
+    box-sizing: border-box;
+  }
+
+  .rating-inner:hover {
+    background: rgba(255, 255, 255, 0.1); 
+  }
+
+  .rating-label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: white; 
+  }
+
+  .rate-select {
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    color: #f59e0b; 
+    cursor: pointer;
+    outline: none;
+    font-weight: bold;
+    width: auto;
+    min-width: 80px;
+  }
+
+  .rate-select option {
+    background-color: #222;
+    color: white;
+  }
+
+  .vote-btn {
+    background: #f59e0b; 
+    color: black;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .vote-btn:hover {
+    transform: scale(1.1);
+    background: white;
+  }
+
+  .rating-msg {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ddd;
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,217 @@
+---
+import Navbar from '../components/React/filmOner';
+import { ViewTransitions } from 'astro:transitions';
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cineverse Sinema Uygulaması">
+    <title>{title} | Cineverse</title>
+    <ViewTransitions />
+</head>
+
+<body>
+
+    <header class="main-header">
+        
+        <a href="/" class="logo">
+            <span class="icon">🎥</span> Cineverse
+        </a>
+
+        <div class="header-right-group">
+            
+            <div class="nav-item">
+                <Navbar client:load />
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="auth-buttons">
+                <div id="logged-out-view" style="display: none;">
+                    <button id="login-btn" class="auth-btn login">Giriş</button>
+                    <button id="register-btn" class="auth-btn register">Kayıt Ol</button>
+                </div>
+
+                <div id="logged-in-view" style="display: none;">
+                    <span id="user-email"></span>
+                    <button id="logout-btn" class="auth-btn logout">Çıkış</button>
+                </div>
+            </div>
+        </div>
+
+    </header>
+
+    <main>
+        <slot />
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Cineverse. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <dialog id="auth-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Giriş Yap</h2>
+            <input type="email" id="auth-email" placeholder="E-posta Adresi" />
+            <input type="password" id="auth-password" placeholder="Şifre" />
+            <p id="auth-error"></p>
+            <button id="modal-submit-btn" class="modal-submit-btn">Devam Et</button>
+            <button id="modal-close-btn" class="close-btn">✕</button>
+        </div>
+    </dialog>
+
+    <script>
+        import { auth } from "../firebaseConfig";
+        import { 
+            onAuthStateChanged, 
+            signInWithEmailAndPassword, 
+            createUserWithEmailAndPassword, 
+            signOut 
+        } from "firebase/auth";
+
+        function initApp() {
+            const loggedOutView = document.getElementById('logged-out-view');
+            const loggedInView = document.getElementById('logged-in-view');
+            const userEmailSpan = document.getElementById('user-email');
+            
+            const modal = document.getElementById('auth-modal') as HTMLDialogElement;
+            const loginBtn = document.getElementById('login-btn');
+            const registerBtn = document.getElementById('register-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            const modalSubmitBtn = document.getElementById('modal-submit-btn');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalTitle = document.getElementById('modal-title');
+            const errorMsg = document.getElementById('auth-error');
+            
+            const emailInput = document.getElementById('auth-email') as HTMLInputElement;
+            const passInput = document.getElementById('auth-password') as HTMLInputElement;
+
+            let isRegistering = false;
+
+            if (auth) {
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        if(loggedOutView) loggedOutView.style.display = 'none';
+                        if(loggedInView) loggedInView.style.display = 'flex';
+                        if(userEmailSpan && user.email) userEmailSpan.textContent = user.email.split('@')[0];
+                    } else {
+                        if(loggedOutView) loggedOutView.style.display = 'flex';
+                        if(loggedInView) loggedInView.style.display = 'none';
+                    }
+                });
+            }
+
+            const openModal = (registerMode: boolean) => {
+                isRegistering = registerMode;
+                if(modalTitle) modalTitle.textContent = registerMode ? "Kayıt Ol" : "Giriş Yap";
+                if(modalSubmitBtn) modalSubmitBtn.textContent = registerMode ? "Kayıt Ol" : "Giriş Yap";
+                if(errorMsg) errorMsg.textContent = "";
+                if(modal) modal.showModal();
+            }
+
+            if (loginBtn) loginBtn.addEventListener('click', () => openModal(false));
+            if (registerBtn) registerBtn.addEventListener('click', () => openModal(true));
+            if (modalCloseBtn && modal) modalCloseBtn.addEventListener('click', () => modal.close());
+            
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    signOut(auth);
+                    location.reload();
+                });
+            }
+
+            if (modalSubmitBtn) {
+                modalSubmitBtn.addEventListener('click', async () => {
+                    if(!emailInput || !passInput) return;
+                    const email = emailInput.value;
+                    const password = passInput.value;
+
+                    try {
+                        if (isRegistering) {
+                            await createUserWithEmailAndPassword(auth, email, password);
+                            alert("Kayıt Başarılı!");
+                        } else {
+                            await signInWithEmailAndPassword(auth, email, password);
+                        }
+                        if (modal) modal.close();
+                    } catch (error: any) {
+                        if(errorMsg) {
+                            if (error.code === 'auth/weak-password') errorMsg.textContent = "Şifre en az 6 karakter olmalı.";
+                            else if (error.code === 'auth/email-already-in-use') errorMsg.textContent = "Bu e-posta zaten kayıtlı.";
+                            else errorMsg.textContent = "Hatalı e-posta veya şifre.";
+                        }
+                    }
+                });
+            }
+        }
+
+        initApp();
+        document.addEventListener('astro:page-load', initApp);
+    </script>
+
+    <style is:global>
+        body { margin: 0; padding: 0; background-color: #f5f5f5; color: #333; font-family: 'Segoe UI', sans-serif; }
+        
+        .main-header {
+            background-color: #000;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo { color: #fff; text-decoration: none; font-size: 1.6rem; font-weight: 800; display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px; }
+        .logo .icon { font-size: 1.4rem; }
+        
+        .header-right-group { display: flex; align-items: center; gap: 15px; }
+        .divider { width: 1px; height: 24px; background-color: #333; }
+        .nav-item, .auth-buttons, #logged-out-view, #logged-in-view { display: flex; align-items: center; gap: 10px; }
+
+        .auth-btn { padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s ease; }
+        
+        .login { background: transparent; color: #ccc; border: 1px solid #444; }
+        .login:hover { color: white; border-color: white; }
+
+        /* GÜNCELLENEN KAYIT OL BUTONU (Film Öner ile aynı renk: #ffbc40) */
+        .register { 
+            background: #ffbc40; 
+            color: #222; /* Yazı rengini hafif koyu yaptık okunabilirlik için */
+            border: none; 
+        }
+        .register:hover { 
+            background: #ffda85; /* Üzerine gelince biraz daha açılır */
+            transform: translateY(-1px); 
+        }
+
+        .logout { background: #dc2626; color: white; border: none; font-size: 0.8rem; padding: 6px 12px; }
+        #user-email { color: #ffbc40; font-weight: bold; margin-right: 5px; }
+
+        /* MODAL STİLLERİ */
+        .modal { background: #1a1a1a; color: white; border: 1px solid #333; border-radius: 12px; padding: 0; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .modal::backdrop { background: rgba(0,0,0,0.8); }
+        .modal-content { padding: 30px; width: 320px; display: flex; flex-direction: column; gap: 15px; position: relative; }
+        .modal input { padding: 12px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 6px; outline: none; }
+        .modal input:focus { border-color: #ffbc40; }
+        
+        /* Modal içindeki buton da uyumlu olsun */
+        .modal-submit-btn { padding: 12px; background: #ffbc40; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; color: #222; }
+        .modal-submit-btn:hover { background: #ffda85; }
+
+        .close-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; color: #666; cursor: pointer; font-size: 1.2rem; }
+        #auth-error { color: #ff4444; font-size: 0.85rem; margin: 0; }
+
+        main { display: flex; flex-direction: column; align-items: center; min-height: 80vh; }
+        footer { margin-top: 50px; text-align: center; color: #666; padding: 20px; }
+    </style>
+</body>
+</html>

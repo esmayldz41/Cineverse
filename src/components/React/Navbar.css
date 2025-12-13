@@ -1,0 +1,43 @@
+
+.Navbar {
+    background-color: transparent; 
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+}
+
+.Navbar h1 {
+    display: none;
+}
+
+.Logo {
+    display: none;
+}
+
+.Navbar button {
+    background-color: #ffbc40; 
+    color: #222;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 25px; 
+    cursor: pointer;
+    font-size: 15px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px; 
+    font-weight: bold;
+    transition: all 0.3s ease;
+    white-space: nowrap; 
+}
+
+.random {
+    font-size: 20px;
+}
+
+.Navbar button:hover {
+    background-color: #ffda85; 
+    transform: scale(1.05); 
+}

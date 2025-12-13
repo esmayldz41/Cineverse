@@ -1,0 +1,241 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import movies from '../data/movies.json';
+import MovieCard from '../components/MovieCard.astro';
+
+// Kategorileri belirle
+const categories = ["Tümü", ...new Set(movies.map(movie => movie.category))];
+---
+
+<MainLayout title="Anasayfa">
+    <div class="header-container">
+        <h1 class="page-title">Cineverse Keşfet</h1>
+    </div>
+    
+    <div class="controls-container">
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Film adı ara..." />
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <div class="filter-container">
+            {categories.map(category => (
+                <button class="filter-btn" data-category={category}>
+                    {category}
+                </button>
+            ))}
+        </div>
+    </div>
+
+    <div class="movie-grid" id="movie-grid">
+        {movies.map((movie) => (
+            <div 
+                class="movie-wrapper" 
+                data-category={movie.category} 
+                data-title={movie.title.toLowerCase()} 
+            >
+                <MovieCard 
+                    id={movie.id}
+                    title={movie.title} 
+                    description={movie.description} 
+                    poster={movie.poster} 
+                    rating={movie.rating} 
+                />
+            </div>
+        ))}
+    </div>
+
+    <div id="no-results" style="display: none; text-align: center; margin-top: 2rem; color: #666;">
+        <p>Aradığınız kriterlere uygun film bulunamadı.</p>
+    </div>
+</MainLayout>
+
+<script>
+    function setupFilters() {
+        const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const movies = document.querySelectorAll('.movie-wrapper') as NodeListOf<HTMLElement>;
+        const noResultsMsg = document.getElementById('no-results') as HTMLElement;
+
+        // Eğer elementler sayfada yoksa (başka sayfadaysak) dur, hata verme
+        if (!searchInput || !noResultsMsg) return;
+
+        // Başlangıç Durumu
+        let activeCategory = 'Tümü';
+        let searchQuery = '';
+
+        // --- Fonksiyon: Filtreleri Uygula ---
+        function applyFilters() {
+            let visibleCount = 0;
+
+            movies.forEach(movie => {
+                const movieCategory = movie.getAttribute('data-category');
+                const movieTitle = movie.getAttribute('data-title') || ''; 
+
+                // 1. Kategori Uyuyor mu?
+                const isCategoryMatch = (activeCategory === 'Tümü') || (movieCategory === activeCategory);
+                
+                // 2. Arama Metni Uyuyor mu?
+                const isSearchMatch = movieTitle.includes(searchQuery);
+
+                // İkisi de uyuyorsa göster, yoksa gizle
+                if (isCategoryMatch && isSearchMatch) {
+                    movie.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    movie.style.display = 'none';
+                }
+            });
+
+            // Hiç film kalmadıysa "Bulunamadı" mesajı göster
+            if (visibleCount === 0) {
+                noResultsMsg.style.display = 'block';
+            } else {
+                noResultsMsg.style.display = 'none';
+            }
+        }
+
+        // --- Olay Dinleyicileri (Event Listeners) ---
+
+        // 1. Kategori Butonuna Tıklanınca
+        filterBtns.forEach(btn => {
+            // Önce eski event listener varsa temizleyelim (çakışmayı önlemek için)
+            const newBtn = btn.cloneNode(true) as Element;
+            btn.parentNode?.replaceChild(newBtn, btn);
+
+            newBtn.addEventListener('click', (e) => {
+                const clickedBtn = e.target as HTMLElement;
+
+                // Görsel güncelleme
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                clickedBtn.classList.add('active');
+
+                // Filtreleme
+                activeCategory = clickedBtn.getAttribute('data-category') || 'Tümü';
+                applyFilters();
+            });
+        });
+
+        // Butonları yenilediğimiz için "Tümü" butonunu tekrar aktif yapalım
+        const allBtn = document.querySelector('.filter-btn[data-category="Tümü"]');
+        if(allBtn) allBtn.classList.add('active');
+
+        // 2. Arama Kutusuna Yazılınca
+        searchInput.addEventListener('input', (e) => {
+            const target = e.target as HTMLInputElement;
+            searchQuery = target.value.toLowerCase();
+            applyFilters();
+        });
+    }
+
+    setupFilters(); 
+    document.addEventListener('astro:page-load', setupFilters);
+</script>
+
+<style>
+    .header-container {
+        background-color: rgb(255, 188, 64);
+        color: white;
+        box-shadow: #333 0px 2px 4px;
+        padding: 0;
+        margin-bottom: 2rem;
+        width: 400px;
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        border-radius: 12px;
+    }
+
+    .controls-container {
+        max-width: 800px;
+        margin: 0 auto 3rem auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+    .search-box {
+        position: relative;
+        width: 100%;
+        max-width: 500px;
+        margin-right: 40px;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 12px 20px 12px 20px;
+        font-size: 1rem;
+        border: 2px solid #eee;
+        border-radius: 50px;
+        outline: none;
+        transition: border-color 0.3s box-shadow 0.3s;
+    }
+
+    .search-box input:focus {
+        border-color: #222;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+        opacity: 0.5;
+        pointer-events: none; 
+    }
+
+    .filter-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 8px 20px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        background: white;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    .filter-btn:hover {
+        color: white;
+        transform: translateY(-2px);
+        background-color: #1d1d1d;
+    }
+
+    .filter-btn.active {
+        background: #222;
+        color: white;
+        border-color: #222;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    /* Film Grid */
+    .movie-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        padding: 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .movie-wrapper {
+        animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
